@@ -1,0 +1,18 @@
+services:
+  db:
+    image: mysql
+    restart: always
+    ports:
+      - 3306:3306
+    env_file: .env.development
+
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+
+  rcli:
+    image: redis
+    links:
+      - redis
+    command: redis-cli -h redis
