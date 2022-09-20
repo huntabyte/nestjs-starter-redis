@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
@@ -10,11 +11,12 @@ if (process.env.ENVIRONMENT === 'PRODUCTION') envFilePath = '.env.production';
 
 @Module({
   imports: [
+    AuthModule,
+    UsersModule,
     ConfigModule.forRoot({
       envFilePath,
     }),
-    AuthModule,
-    UsersModule,
+    PassportModule.register({ session: true }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.MYSQL_HOST,
