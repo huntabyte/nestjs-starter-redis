@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Inject,
+  InternalServerErrorException,
   Post,
   Req,
   Res,
@@ -10,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { instanceToPlain } from 'class-transformer';
 import { Request, Response } from 'express';
-import { IUsersService } from 'src/users/user';
+import { IUsersService } from 'src/users/users';
 import { Routes, Services } from 'src/utils/constants';
 import { IAuthService } from './auth';
 import { CreateUserDto } from './dtos/CreateUser.dto';
@@ -29,19 +30,27 @@ export class AuthController {
   }
 
   @Post('login')
-  login() {}
+  @UseGuards(LocalAuthGuard)
+  login() {
+    console.log('Logged In');
+  }
 
   @Get('status')
+  @UseGuards(AuthenticatedGuard)
   async status(@Req() req: Request, @Res() res: Response) {
+    console.log('---@AuthController.get("status")---');
+    console.log('Req User:');
+    console.log(req.user);
+    console.log('------------------------------------');
     res.send(req.user);
   }
 
   @Post('logout')
   @UseGuards(AuthenticatedGuard)
-  logout(@Req() req: Request) {
+  logout(@Req() req: Request, @Res() res: Response) {
     return req.logout({ keepSessionInfo: false }, function (err) {
       if (err) {
-        return err;
+        console.log(err);
       }
     });
   }

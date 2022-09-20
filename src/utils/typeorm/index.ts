@@ -1,6 +1,7 @@
 import { User } from './entities/User';
-const entities = [User];
+import { Item } from './entities/Item';
+const entities = [User, Item];
 
-export { User };
+export { User, Item };
 
 export default entities;

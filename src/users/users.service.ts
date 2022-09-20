@@ -1,10 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import { IUsersService } from './user';
-import {
-  CreateUserDetails,
-  ValidateUserCredentials,
-  FindUserParams,
-} from '../utils/types';
+import { IUsersService } from './users';
+import { CreateUserDetails, FindUserParams } from '../utils/types';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/utils/typeorm';
 import { Repository } from 'typeorm';

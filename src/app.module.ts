@@ -4,6 +4,7 @@ import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { ItemsModule } from './items/items.module';
 import entities from './utils/typeorm';
 
 let envFilePath = '.env.development';
@@ -27,6 +28,7 @@ if (process.env.ENVIRONMENT === 'PRODUCTION') envFilePath = '.env.production';
       synchronize: true,
       entities: entities,
     }),
+    ItemsModule,
   ],
   controllers: [],
   providers: [],

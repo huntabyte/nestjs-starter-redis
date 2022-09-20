@@ -14,3 +14,12 @@ export type FindUserParams = Partial<{
   id: number;
   email: string;
 }>;
+
+export type CreateItemDetails = {
+  name: string;
+  description: string;
+};
+
+export type FindItemParams = {
+  id: number;
+};
