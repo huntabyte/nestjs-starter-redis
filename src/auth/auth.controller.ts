@@ -4,6 +4,7 @@ import {
   Get,
   Inject,
   InternalServerErrorException,
+  Logger,
   Post,
   Req,
   Res,
@@ -23,6 +24,7 @@ export class AuthController {
     @Inject(Services.AUTH) private authService: IAuthService,
     @Inject(Services.USERS) private userService: IUsersService,
   ) {}
+  private readonly logger = new Logger(AuthController.name);
 
   @Post('register')
   async registerUser(@Body() createUserDto: CreateUserDto) {
@@ -32,16 +34,13 @@ export class AuthController {
   @Post('login')
   @UseGuards(LocalAuthGuard)
   login() {
-    console.log('Logged In');
+    this.logger.log('User logged in.');
   }
 
   @Get('status')
   @UseGuards(AuthenticatedGuard)
   async status(@Req() req: Request, @Res() res: Response) {
-    console.log('---@AuthController.get("status")---');
-    console.log('Req User:');
-    console.log(req.user);
-    console.log('------------------------------------');
+    this.logger.log(`Authentication status requested for ${req.user}`);
     res.send(req.user);
   }
 
@@ -50,7 +49,7 @@ export class AuthController {
   logout(@Req() req: Request, @Res() res: Response) {
     return req.logout({ keepSessionInfo: false }, function (err) {
       if (err) {
-        console.log(err);
+        this.logger.error(err);
       }
     });
   }
