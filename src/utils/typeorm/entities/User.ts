@@ -22,6 +22,8 @@ export class User {
   @Exclude()
   password: string;
 
-  @OneToMany(() => Item, (item) => item.user)
-  items: Item[];
+  @OneToMany(() => Item, (item) => item.user, {
+    cascade: ['remove'],
+  })
+  items: Promise<Item[]>;
 }

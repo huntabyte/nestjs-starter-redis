@@ -1,3 +1,6 @@
+import { Request } from 'express';
+import { User } from './typeorm';
+
 export type CreateUserDetails = {
   email: string;
   password: string;
@@ -23,3 +26,7 @@ export type CreateItemDetails = {
 export type FindItemParams = {
   id: number;
 };
+
+export interface AuthenticatedRequest extends Request {
+  user: User;
+}

@@ -17,6 +17,7 @@ import { Routes, Services } from 'src/utils/constants';
 import { IAuthService } from './auth';
 import { CreateUserDto } from './dtos/CreateUser.dto';
 import { AuthenticatedGuard, LocalAuthGuard } from './utils/Guards';
+import { HttpStatus } from '@nestjs/common';
 
 @Controller(Routes.AUTH)
 export class AuthController {
@@ -46,11 +47,12 @@ export class AuthController {
 
   @Post('logout')
   @UseGuards(AuthenticatedGuard)
-  logout(@Req() req: Request, @Res() res: Response) {
-    return req.logout({ keepSessionInfo: false }, function (err) {
+  async logout(@Req() req: Request, @Res() res: Response) {
+    req.logout({ keepSessionInfo: false }, function (err) {
       if (err) {
         this.logger.error(err);
       }
     });
+    res.send(HttpStatus.OK);
   }
 }

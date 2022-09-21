@@ -3,11 +3,11 @@ import { ItemsService } from './items.service';
 import { ItemsController } from './items.controller';
 import { UsersModule } from '../users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Item } from 'src/utils/typeorm';
+import { Item, User } from 'src/utils/typeorm';
 import { Services } from 'src/utils/constants';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Item]), UsersModule],
+  imports: [TypeOrmModule.forFeature([Item, User]), UsersModule],
   providers: [
     {
       provide: Services.ITEMS,
