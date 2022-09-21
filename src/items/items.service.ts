@@ -79,4 +79,20 @@ export class ItemsService implements IItemsService {
 
     return null;
   }
+
+  async deleteItem(findItemParams: FindItemParams, user: User) {
+    const item = await this.itemRepository.findOneBy(findItemParams);
+    if (!item) {
+      throw new NotFoundException();
+    }
+    if (item.userId === user.id) {
+      const deletedItem = await this.itemRepository.delete(findItemParams);
+      if (deletedItem) {
+        return true;
+      }
+      throw new InternalServerErrorException();
+    } else {
+      throw new UnauthorizedException();
+    }
+  }
 }

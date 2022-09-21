@@ -53,6 +53,6 @@ export class AuthController {
         this.logger.error(err);
       }
     });
-    res.send(HttpStatus.OK);
+    res.sendStatus(HttpStatus.OK);
   }
 }

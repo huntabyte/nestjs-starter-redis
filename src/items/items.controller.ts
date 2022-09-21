@@ -1,11 +1,13 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
   Post,
   Put,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { IUsersService } from 'src/users/users';
@@ -17,6 +19,8 @@ import { AuthUser } from 'src/utils/decorators';
 import { User } from 'src/utils/typeorm';
 import { FindItemParams } from '../utils/types';
 import { UpdateItemDto } from './dtos/UpdateItem.dto';
+import { Response } from 'express';
+import { HttpStatus } from '@nestjs/common';
 
 @Controller(Routes.ITEMS)
 export class ItemsController {
@@ -24,7 +28,7 @@ export class ItemsController {
 
   @Get('')
   @UseGuards(AuthenticatedGuard)
-  async getItems(@AuthUser() user: User) {
+  async getAllItems(@AuthUser() user: User) {
     return this.itemService.findAllItems(user);
   }
 
@@ -39,7 +43,7 @@ export class ItemsController {
 
   @Get(':id')
   @UseGuards(AuthenticatedGuard)
-  async getItemById(
+  async getItem(
     @AuthUser() user: User,
     @Param() findItemParams: FindItemParams,
   ) {
@@ -48,7 +52,7 @@ export class ItemsController {
 
   @Put(':id')
   @UseGuards(AuthenticatedGuard)
-  async updateItemById(
+  async updateItem(
     @AuthUser() user: User,
     @Param() findItemParams: FindItemParams,
     @Body() updateItemDto: UpdateItemDto,
@@ -58,5 +62,16 @@ export class ItemsController {
       updateItemDto,
       user,
     );
+  }
+
+  @Delete(':id')
+  @UseGuards(AuthenticatedGuard)
+  async deleteItem(
+    @AuthUser() user: User,
+    @Param() findItemParams: FindItemParams,
+    @Res() res: Response,
+  ) {
+    await this.itemService.deleteItem(findItemParams, user);
+    res.sendStatus(HttpStatus.OK);
   }
 }
