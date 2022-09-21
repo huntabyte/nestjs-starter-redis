@@ -30,3 +30,8 @@ export type FindItemParams = {
 export interface AuthenticatedRequest extends Request {
   user: User;
 }
+
+export type UpdateItemDetails = {
+  name?: string;
+  description?: string;
+};

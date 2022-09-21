@@ -1,10 +1,18 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Item, User } from 'src/utils/typeorm';
 import { CreateItemDetails } from 'src/utils/types';
 import { Repository } from 'typeorm';
 import { IItemsService } from './items';
-import { FindItemParams } from '../utils/types';
+import { FindItemParams, UpdateItemDetails } from '../utils/types';
 import { Services } from 'src/utils/constants';
 import { IUsersService } from 'src/users/users';
 
@@ -14,7 +22,6 @@ export class ItemsService implements IItemsService {
 
   constructor(
     @InjectRepository(Item) private readonly itemRepository: Repository<Item>,
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
     @Inject(Services.USERS) private readonly userService: IUsersService,
   ) {}
 
@@ -25,9 +32,15 @@ export class ItemsService implements IItemsService {
   }
 
   async findItem(findItemParams: FindItemParams, user: User) {
-    console.log(findItemParams);
-    console.log(user);
-    return null;
+    const item = await this.itemRepository.findOneBy(findItemParams);
+    if (!item) {
+      throw new NotFoundException();
+    }
+    if (item.userId === user.id) {
+      return item;
+    } else {
+      throw new UnauthorizedException();
+    }
   }
 
   async findAllItems(user: User) {
@@ -38,5 +51,32 @@ export class ItemsService implements IItemsService {
     } else {
       return [];
     }
+  }
+
+  async updateItem(
+    findItemParams: FindItemParams,
+    updateItemDetails: UpdateItemDetails,
+    user: User,
+  ) {
+    if (!updateItemDetails.name && !updateItemDetails.description) {
+      throw new BadRequestException();
+    }
+    const item = await this.itemRepository.findOneBy(findItemParams);
+    if (!item) {
+      throw new NotFoundException();
+    }
+    if (item.userId === user.id) {
+      const updatedItem = await this.itemRepository.update(
+        findItemParams,
+        updateItemDetails,
+      );
+      if (updatedItem) {
+        return await this.itemRepository.findOneBy(findItemParams);
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
+
+    return null;
   }
 }

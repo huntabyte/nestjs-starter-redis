@@ -20,7 +20,10 @@ export class Item {
   @Column()
   description: string;
 
+  @Column({ nullable: true })
+  userId: number;
+
   @ManyToOne(() => User, (user) => user.items)
-  @JoinColumn({ name: 'user_id' })
+  @JoinColumn()
   user: User;
 }
