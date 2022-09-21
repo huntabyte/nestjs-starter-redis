@@ -25,13 +25,13 @@ export class ItemsService implements IItemsService {
     @Inject(Services.USERS) private readonly userService: IUsersService,
   ) {}
 
-  async createItem(createItemDetails: CreateItemDetails, user: User) {
+  async create(createItemDetails: CreateItemDetails, user: User) {
     const newItem = this.itemRepository.create({ user, ...createItemDetails });
     console.log(newItem);
     return this.itemRepository.save(newItem);
   }
 
-  async findItem(findItemParams: FindItemParams, user: User) {
+  async findOne(findItemParams: FindItemParams, user: User) {
     const item = await this.itemRepository.findOneBy(findItemParams);
     if (!item) {
       throw new NotFoundException();
@@ -43,8 +43,8 @@ export class ItemsService implements IItemsService {
     }
   }
 
-  async findAllItems(user: User) {
-    const userDB = this.userService.findUser({ id: user.id });
+  async findAll(user: User) {
+    const userDB = this.userService.findOne({ id: user.id });
     const userItems = (await userDB).items;
     if (userItems) {
       return userItems;
@@ -53,7 +53,7 @@ export class ItemsService implements IItemsService {
     }
   }
 
-  async updateItem(
+  async update(
     findItemParams: FindItemParams,
     updateItemDetails: UpdateItemDetails,
     user: User,
@@ -80,7 +80,7 @@ export class ItemsService implements IItemsService {
     return null;
   }
 
-  async deleteItem(findItemParams: FindItemParams, user: User) {
+  async remove(findItemParams: FindItemParams, user: User) {
     const item = await this.itemRepository.findOneBy(findItemParams);
     if (!item) {
       throw new NotFoundException();

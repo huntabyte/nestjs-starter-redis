@@ -12,7 +12,7 @@ export class UsersService implements IUsersService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
-  async createUser(userDetails: CreateUserDetails) {
+  async create(userDetails: CreateUserDetails) {
     const exists = await this.userRepository.findOneBy({
       email: userDetails.email,
     });
@@ -24,7 +24,7 @@ export class UsersService implements IUsersService {
     return this.userRepository.save(newUser);
   }
 
-  async findUser(findUserParams: FindUserParams): Promise<User> {
+  async findOne(findUserParams: FindUserParams): Promise<User> {
     return this.userRepository.findOneBy(findUserParams);
   }
 }

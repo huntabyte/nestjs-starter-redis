@@ -1,4 +1,4 @@
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as createRedisStore from 'connect-redis';
@@ -9,12 +9,14 @@ import { createClient } from 'redis';
 async function bootstrap() {
   const { PORT, SESSION_SECRET } = process.env;
   const app = await NestFactory.create(AppModule);
+  const logger = new Logger(bootstrap.name);
 
   const redisClient = createClient({ legacyMode: true });
   const RedisStore = createRedisStore(session);
   redisClient.connect().catch(console.error);
 
   app.setGlobalPrefix('api');
+  app.enableCors({ origin: ['http://localhost:5173'], credentials: true });
   app.useGlobalPipes(new ValidationPipe());
 
   app.use(
@@ -33,9 +35,9 @@ async function bootstrap() {
   app.use(passport.session());
 
   try {
-    await app.listen(PORT, () => console.log(`Running on port ${PORT}`));
+    await app.listen(PORT, () => logger.log(`Server running on port: ${PORT}`));
   } catch (err) {
-    console.log(err);
+    logger.error(err);
   }
 }
 bootstrap();

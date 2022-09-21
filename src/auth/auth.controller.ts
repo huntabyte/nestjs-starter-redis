@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   Inject,
-  InternalServerErrorException,
   Logger,
   Post,
   Req,
@@ -14,22 +13,18 @@ import { instanceToPlain } from 'class-transformer';
 import { Request, Response } from 'express';
 import { IUsersService } from 'src/users/users';
 import { Routes, Services } from 'src/utils/constants';
-import { IAuthService } from './auth';
 import { CreateUserDto } from './dtos/CreateUser.dto';
 import { AuthenticatedGuard, LocalAuthGuard } from './utils/Guards';
 import { HttpStatus } from '@nestjs/common';
 
 @Controller(Routes.AUTH)
 export class AuthController {
-  constructor(
-    @Inject(Services.AUTH) private authService: IAuthService,
-    @Inject(Services.USERS) private userService: IUsersService,
-  ) {}
+  constructor(@Inject(Services.USERS) private userService: IUsersService) {}
   private readonly logger = new Logger(AuthController.name);
 
   @Post('register')
   async registerUser(@Body() createUserDto: CreateUserDto) {
-    return instanceToPlain(await this.userService.createUser(createUserDto));
+    return instanceToPlain(await this.userService.create(createUserDto));
   }
 
   @Post('login')

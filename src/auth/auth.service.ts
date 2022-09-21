@@ -21,7 +21,7 @@ export class AuthService implements IAuthService {
 
   async validateUser(userCredentials: ValidateUserCredentials) {
     this.logger.log('Validating User');
-    const user = await this.userService.findUser({
+    const user = await this.userService.findOne({
       email: userCredentials.email,
     });
     if (!user) {

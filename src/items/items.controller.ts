@@ -10,7 +10,6 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { IUsersService } from 'src/users/users';
 import { Routes, Services } from '../utils/constants';
 import { IItemsService } from './items';
 import { AuthenticatedGuard } from '../auth/utils/Guards';
@@ -26,52 +25,45 @@ import { HttpStatus } from '@nestjs/common';
 export class ItemsController {
   constructor(@Inject(Services.ITEMS) private itemService: IItemsService) {}
 
-  @Get('')
-  @UseGuards(AuthenticatedGuard)
-  async getAllItems(@AuthUser() user: User) {
-    return this.itemService.findAllItems(user);
-  }
-
   @Post('')
   @UseGuards(AuthenticatedGuard)
-  async createItem(
-    @AuthUser() user: User,
-    @Body() createItemDto: CreateItemDto,
-  ) {
-    return await this.itemService.createItem(createItemDto, user);
+  async create(@AuthUser() user: User, @Body() createItemDto: CreateItemDto) {
+    return await this.itemService.create(createItemDto, user);
+  }
+
+  @Get('')
+  @UseGuards(AuthenticatedGuard)
+  async findAll(@AuthUser() user: User) {
+    return this.itemService.findAll(user);
   }
 
   @Get(':id')
   @UseGuards(AuthenticatedGuard)
-  async getItem(
+  async findOne(
     @AuthUser() user: User,
     @Param() findItemParams: FindItemParams,
   ) {
-    return await this.itemService.findItem(findItemParams, user);
+    return await this.itemService.findOne(findItemParams, user);
   }
 
   @Put(':id')
   @UseGuards(AuthenticatedGuard)
-  async updateItem(
+  async update(
     @AuthUser() user: User,
     @Param() findItemParams: FindItemParams,
     @Body() updateItemDto: UpdateItemDto,
   ) {
-    return await this.itemService.updateItem(
-      findItemParams,
-      updateItemDto,
-      user,
-    );
+    return await this.itemService.update(findItemParams, updateItemDto, user);
   }
 
   @Delete(':id')
   @UseGuards(AuthenticatedGuard)
-  async deleteItem(
+  async remove(
     @AuthUser() user: User,
     @Param() findItemParams: FindItemParams,
     @Res() res: Response,
   ) {
-    await this.itemService.deleteItem(findItemParams, user);
+    await this.itemService.remove(findItemParams, user);
     res.sendStatus(HttpStatus.OK);
   }
 }

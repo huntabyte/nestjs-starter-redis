@@ -1,4 +1,3 @@
-import { Response } from 'express';
 import { Item, User } from 'src/utils/typeorm';
 import {
   CreateItemDetails,
@@ -7,16 +6,16 @@ import {
 } from '../utils/types';
 
 export interface IItemsService {
-  createItem(
+  create(
     createItemDetails: CreateItemDetails,
     user: User,
   ): Promise<Item | null>;
-  findItem(findItemParams: FindItemParams, user: User): Promise<Item | null>;
-  findAllItems(user: User): Promise<Item[] | []>;
-  updateItem(
+  findOne(findItemParams: FindItemParams, user: User): Promise<Item | null>;
+  findAll(user: User): Promise<Item[] | []>;
+  update(
     findItemParams: FindItemParams,
     updateItemDetails: UpdateItemDetails,
     user: User,
   ): Promise<Item | null>;
-  deleteItem(findItemParams: FindItemParams, user: User): Promise<boolean>;
+  remove(findItemParams: FindItemParams, user: User): Promise<boolean>;
 }

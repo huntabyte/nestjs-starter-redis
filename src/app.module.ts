@@ -7,6 +7,8 @@ import { UsersModule } from './users/users.module';
 import { ItemsModule } from './items/items.module';
 import entities from './utils/typeorm';
 import { LoggerMiddleware } from './utils/logger.middleware';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 let envFilePath = '.env.development';
 if (process.env.ENVIRONMENT === 'PRODUCTION') envFilePath = '.env.production';
@@ -30,9 +32,18 @@ if (process.env.ENVIRONMENT === 'PRODUCTION') envFilePath = '.env.production';
       entities: entities,
     }),
     ItemsModule,
+    ThrottlerModule.forRoot({
+      ttl: 10,
+      limit: 2,
+    }),
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
