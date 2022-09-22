@@ -28,3 +28,15 @@ export class AuthenticatedGuard implements CanActivate {
     return req.isAuthenticated();
   }
 }
+
+@Injectable()
+export class AdminGuard extends AuthenticatedGuard {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const req = context.switchToHttp().getRequest();
+    return (
+      (super.canActivate(context) &&
+        req.session.passport.user.role === 'admin') ||
+      req.session.passport.user.role === 'superadmin'
+    );
+  }
+}

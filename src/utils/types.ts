@@ -8,6 +8,13 @@ export type CreateUserDetails = {
   lastName: string;
 };
 
+export type UpdateUserDetails = {
+  email?: string;
+  password?: string;
+  firstName: string;
+  lastName: string;
+};
+
 export type ValidateUserCredentials = {
   email: string;
   password: string;

@@ -2,6 +2,7 @@ import { IsEmail, IsNotEmpty, MaxLength, MinLength } from 'class-validator';
 
 export class CreateUserDto {
   @IsEmail()
+  @MaxLength(64)
   @IsNotEmpty()
   email: string;
 
@@ -19,4 +20,6 @@ export class CreateUserDto {
   @MinLength(10)
   @MaxLength(32)
   password: string;
+
+  role = 'user';
 }

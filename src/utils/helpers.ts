@@ -26,3 +26,7 @@ export function isAuthorized(
   if (req.user) next();
   else throw new HttpException('Forbidden', HttpStatus.UNAUTHORIZED);
 }
+
+export function isEmptyObj(obj: any) {
+  return Object.keys(obj).length === 0;
+}

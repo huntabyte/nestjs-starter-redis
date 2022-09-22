@@ -23,7 +23,7 @@ export class Item {
   @Column({ nullable: true })
   userId: number;
 
-  @ManyToOne(() => User, (user) => user.items)
+  @ManyToOne(() => User, (user) => user.items, { onDelete: 'CASCADE' })
   @JoinColumn()
   user: User;
 }

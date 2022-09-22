@@ -32,18 +32,9 @@ if (process.env.ENVIRONMENT === 'PRODUCTION') envFilePath = '.env.production';
       entities: entities,
     }),
     ItemsModule,
-    ThrottlerModule.forRoot({
-      ttl: 10,
-      limit: 2,
-    }),
   ],
   controllers: [],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
-  ],
+  providers: [],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

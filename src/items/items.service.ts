@@ -1,11 +1,11 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Inject,
   Injectable,
   InternalServerErrorException,
   Logger,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Item, User } from 'src/utils/typeorm';
@@ -15,6 +15,7 @@ import { IItemsService } from './items';
 import { FindItemParams, UpdateItemDetails } from '../utils/types';
 import { Services } from 'src/utils/constants';
 import { IUsersService } from 'src/users/users';
+import { isEmptyObj } from 'src/utils/helpers';
 
 @Injectable()
 export class ItemsService implements IItemsService {
@@ -34,12 +35,12 @@ export class ItemsService implements IItemsService {
   async findOne(findItemParams: FindItemParams, user: User) {
     const item = await this.itemRepository.findOneBy(findItemParams);
     if (!item) {
-      throw new NotFoundException();
+      throw new BadRequestException();
     }
     if (item.userId === user.id) {
       return item;
     } else {
-      throw new UnauthorizedException();
+      throw new ForbiddenException();
     }
   }
 
@@ -58,8 +59,10 @@ export class ItemsService implements IItemsService {
     updateItemDetails: UpdateItemDetails,
     user: User,
   ) {
-    if (!updateItemDetails.name && !updateItemDetails.description) {
-      throw new BadRequestException();
+    if (isEmptyObj(updateItemDetails)) {
+      throw new BadRequestException(
+        'At least one property on the item must be provided to update.',
+      );
     }
     const item = await this.itemRepository.findOneBy(findItemParams);
     if (!item) {
@@ -73,11 +76,13 @@ export class ItemsService implements IItemsService {
       if (updatedItem) {
         return await this.itemRepository.findOneBy(findItemParams);
       } else {
-        throw new InternalServerErrorException();
+        throw new InternalServerErrorException(
+          'Something went wrong. Please try again later.',
+        );
       }
+    } else {
+      throw new ForbiddenException();
     }
-
-    return null;
   }
 
   async remove(findItemParams: FindItemParams, user: User) {
@@ -90,9 +95,11 @@ export class ItemsService implements IItemsService {
       if (deletedItem) {
         return true;
       }
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException(
+        'Something went wrong. Please try again later.',
+      );
     } else {
-      throw new UnauthorizedException();
+      throw new ForbiddenException();
     }
   }
 }

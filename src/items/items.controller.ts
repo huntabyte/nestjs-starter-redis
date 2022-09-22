@@ -9,6 +9,7 @@ import {
   Put,
   Res,
   UseGuards,
+  HttpStatus,
 } from '@nestjs/common';
 import { Routes, Services } from '../utils/constants';
 import { IItemsService } from './items';
@@ -19,7 +20,6 @@ import { User } from 'src/utils/typeorm';
 import { FindItemParams } from '../utils/types';
 import { UpdateItemDto } from './dtos/UpdateItem.dto';
 import { Response } from 'express';
-import { HttpStatus } from '@nestjs/common';
 
 @Controller(Routes.ITEMS)
 export class ItemsController {

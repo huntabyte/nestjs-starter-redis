@@ -22,8 +22,10 @@ export class User {
   @Exclude()
   password: string;
 
-  @OneToMany(() => Item, (item) => item.user, {
-    cascade: ['remove'],
-  })
+  @Column({ default: 'user', nullable: false })
+  @Exclude()
+  role: string;
+
+  @OneToMany(() => Item, (item) => item.user)
   items: Promise<Item[]>;
 }

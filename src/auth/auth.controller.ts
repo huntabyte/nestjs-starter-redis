@@ -13,7 +13,7 @@ import { instanceToPlain } from 'class-transformer';
 import { Request, Response } from 'express';
 import { IUsersService } from 'src/users/users';
 import { Routes, Services } from 'src/utils/constants';
-import { CreateUserDto } from './dtos/CreateUser.dto';
+import { CreateUserDto } from '../users/dtos/CreateUser.dto';
 import { AuthenticatedGuard, LocalAuthGuard } from './utils/Guards';
 import { HttpStatus } from '@nestjs/common';
 
