@@ -1,4 +1,5 @@
 import { User } from 'src/utils/typeorm';
+import { UpdateUserDto } from './dtos/UpdateUser.dto';
 import {
   CreateUserDetails,
   FindUserParams,
@@ -11,7 +12,7 @@ export interface IUsersService {
   findAll(): Promise<User[] | []>;
   update(
     findUserParams: FindUserParams,
-    updateUserDetails: UpdateUserDetails,
+    updateUserDetails: UpdateUserDto,
     user: User,
   ): Promise<User>;
   remove(FindUserParams: FindUserParams, user: User): Promise<boolean>;

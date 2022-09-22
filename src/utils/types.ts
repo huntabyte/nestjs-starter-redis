@@ -9,8 +9,7 @@ export type CreateUserDetails = {
 };
 
 export type UpdateUserDetails = {
-  email?: string;
-  password?: string;
+  email: string;
   firstName: string;
   lastName: string;
 };
